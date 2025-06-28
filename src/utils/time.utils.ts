@@ -17,12 +17,19 @@ export function isInTimeInterval(start: string, end: string): boolean {
 }
 
 export function normalizeTime(input: string): string | null {
+  // Проверяем, что строка состоит только из цифр и :
+  if (!/^\d{1,2}:\d{1,2}$/.test(input)) return null;
+
   const parts = input.split(':');
   if (parts.length !== 2) return null;
 
-  const [h, m] = parts.map(Number);
+  const [hStr, mStr] = parts;
+  const h = Number(hStr);
+  const m = Number(mStr);
 
-  if (Number.isNaN(h) || Number.isNaN(m)) return null;
+  // Проверяем целые ли это числа
+  if (!Number.isInteger(h) || !Number.isInteger(m)) return null;
+
   if (h < 0 || h > 23) return null;
   if (m < 0 || m > 59) return null;
 
