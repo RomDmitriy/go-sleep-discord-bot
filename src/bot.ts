@@ -41,7 +41,7 @@ client.on(Events.MessageCreate, async (message) => {
 
   const user = sleepStore.getUser(message.author.id);
 
-  if (user && isInTimeInterval(user.intervalUTC.startTime, user.intervalUTC.endTime)) {
+  if (user && user.isEnabled && isInTimeInterval(user.intervalUTC.startTime, user.intervalUTC.endTime)) {
     try {
       await message.delete();
       console.log(`Deleted message from ${message.author.id} during sleep.`);

@@ -10,6 +10,7 @@ export function startSleepChecker(client: Client) {
     const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
     const users = sleepStore.getUsers();
     for (const userId of Object.keys(users)) {
+      if (!users[userId].isEnabled) continue;
       const { startTime, endTime } = users[userId].intervalUTC;
       const days = users[userId].days;
 

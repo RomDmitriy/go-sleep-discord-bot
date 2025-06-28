@@ -67,12 +67,15 @@ class SleepStore {
         startTime,
         endTime,
       };
+
       this.sleepData[userId].utcOffset = utcOffset;
 
       this.sleepData[userId].intervalUTC = {
         startTime: adjustTimeToUTC(startTime, this.sleepData[userId].utcOffset),
         endTime: adjustTimeToUTC(endTime, this.sleepData[userId].utcOffset),
       };
+
+      this.sleepData[userId].isEnabled = true;
     }
 
     return this.saveSleepData();
