@@ -1,16 +1,24 @@
 import { ChatInputCommandInteraction, MessageFlags, SlashCommandBuilder } from 'discord.js';
-import { saveSleepData } from '../store/sleep.store.js';
 import { normalizeTime } from '../utils/time.utils.js';
+import { sleepStore } from '../store/sleep.store.js';
 
 export const data = new SlashCommandBuilder()
   .setName('gosleep')
   .setDescription('Установить режим сна')
   .addStringOption((option) => option.setName('start_time').setDescription('Начало сна (HH:mm)').setRequired(true))
-  .addStringOption((option) => option.setName('end_time').setDescription('Конец сна (HH:mm)').setRequired(true));
+  .addStringOption((option) => option.setName('end_time').setDescription('Конец сна (HH:mm)').setRequired(true))
+  .addNumberOption((option) =>
+    option
+      .setName('utc_offset')
+      .setDescription('Смещение от UTC. Если не указано, значит UTC+3')
+      .setMinValue(-12)
+      .setMaxValue(14),
+  );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-  let startTime: string | null = interaction.options.getString('start_time')!;
-  let endTime: string | null = interaction.options.getString('end_time')!;
+  let startTime: string | null = interaction.options.getString('start_time') ?? '';
+  let endTime: string | null = interaction.options.getString('end_time') ?? '';
+  let utcOffset: number = interaction.options.getNumber('utc_offset') ?? 3;
 
   startTime = normalizeTime(startTime) ?? null;
   endTime = normalizeTime(endTime) ?? null;
@@ -23,10 +31,10 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     return;
   }
 
-  await saveSleepData({ [interaction.user.id]: { startTime, endTime } });
+  await sleepStore.setInterval(interaction.user.id, startTime, endTime, utcOffset);
 
   await interaction.reply({
-    content: `✅ Режим сна установлен: **${startTime} — ${endTime}**`,
+    content: `✅ Режим сна установлен: **${startTime} — ${endTime} UTC+${utcOffset}**`,
     flags: MessageFlags.Ephemeral,
   });
 }

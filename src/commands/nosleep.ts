@@ -1,14 +1,10 @@
 import { ChatInputCommandInteraction, MessageFlags, SlashCommandBuilder } from 'discord.js';
-import { loadSleepData, saveSleepData } from '../store/sleep.store.js';
+import { sleepStore } from '../store/sleep.store';
 
 export const data = new SlashCommandBuilder().setName('nosleep').setDescription('Удалить режим сна');
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-  const sleepData = await loadSleepData();
-
-  if (sleepData[interaction.user.id]) {
-    delete sleepData[interaction.user.id];
-    await saveSleepData(sleepData);
+  if (await sleepStore.setStatus(interaction.user.id, false)) {
     await interaction.reply({
       content: 'Твой режим сна удалён.',
       flags: MessageFlags.Ephemeral,
