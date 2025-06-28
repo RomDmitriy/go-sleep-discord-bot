@@ -6,7 +6,7 @@ import { sleepStore } from '../store/sleep.store.js';
 type weekdayType = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
 export function startSleepChecker(client: Client) {
-  cron.schedule('*/5 * * * * *', async () => {
+  cron.schedule('0 * * * * *', async () => {
     const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
     const users = sleepStore.getUsers();
     for (const userId of Object.keys(users)) {

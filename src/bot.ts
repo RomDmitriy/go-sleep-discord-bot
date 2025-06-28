@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, Events } from 'discord.js';
+import { Client, GatewayIntentBits, Events, VoiceState } from 'discord.js';
 import dotenv from 'dotenv';
 import { registerCommands } from './commands/registerCommands.js';
 import * as goSleep from './commands/gosleep.js';
@@ -33,6 +33,27 @@ client.on(Events.InteractionCreate, async (interaction) => {
     await noSleep.execute(interaction);
   } else if (interaction.commandName === 'setdays') {
     await setdays.execute(interaction);
+  }
+});
+
+client.on(Events.VoiceStateUpdate, async (oldState: VoiceState, newState: VoiceState) => {
+  // Пользователь не зашёл в войс - ничего не делаем
+  if (!newState.channelId) return;
+
+  const userId = newState.id;
+
+  const userSleep = sleepStore.getUser(userId);
+  if (!userSleep) return; // у пользователя нет режима сна
+
+  const { startTime, endTime } = userSleep.intervalUTC;
+
+  if (isInTimeInterval(startTime, endTime)) {
+    try {
+      await newState.disconnect();
+      console.log(`Kicked user ${userId} from voice during sleep interval.`);
+    } catch (error) {
+      console.error(`Failed to disconnect user ${userId}:`, error);
+    }
   }
 });
 
