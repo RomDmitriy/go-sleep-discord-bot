@@ -44,6 +44,7 @@ client.on(Events.VoiceStateUpdate, async (oldState: VoiceState, newState: VoiceS
 
   const userSleep = sleepStore.getUser(userId);
   if (!userSleep) return; // у пользователя нет режима сна
+  if (!userSleep.isEnabled) return; // у пользователя выключены ограничения
 
   const { startTime, endTime } = userSleep.intervalUTC;
 
