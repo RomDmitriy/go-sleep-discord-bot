@@ -81,6 +81,9 @@ class SleepStore {
     return this.saveSleepData();
   }
 
+  /**
+   * @deprecated
+   */
   async setStatus(userId: string, isEnabled: boolean): Promise<boolean> {
     const user = this.sleepData[userId];
     if (!user) return false;
@@ -88,6 +91,11 @@ class SleepStore {
     user.isEnabled = isEnabled;
     await this.saveSleepData();
     return true;
+  }
+
+  async deleteUser(userId: string): Promise<void> {
+    delete this.sleepData[userId];
+    return this.saveSleepData();
   }
 
   async setDays(userId: string, days: IDays) {

@@ -59,3 +59,21 @@ export function adjustTimeToUTC(localTime: string, offsetHours: number): string 
 
   return `${resultH.toString().padStart(2, '0')}:${resultM.toString().padStart(2, '0')}`;
 }
+
+/**
+ * Высчитывает сколько минут разницы между текущим временем и targetTime
+ * @param targetTime строка HH:mm, с которой будет сравниваться текущее время
+ * @returns количество минут разницы между текущим временем и targetTime
+ */
+export function getMinutesDifference(targetTime: string): number {
+  const now = new Date();
+  const nowMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
+
+  const [th, tm] = targetTime.split(':').map(Number);
+  const targetMinutes = th * 60 + tm;
+
+  let diff = targetMinutes - nowMinutes;
+  if (diff < 0) diff += 24 * 60;
+
+  return diff;
+}
