@@ -17,7 +17,6 @@ interface IDays {
 
 class SleepUser {
   constructor(startTime: string, endTime: string, utcOffset: number) {
-    this.isEnabled = true;
     this.utcOffset = utcOffset;
     this.interval = {
       startTime,
@@ -38,7 +37,6 @@ class SleepUser {
     };
   }
 
-  isEnabled: boolean;
   utcOffset?: number;
   interval: {
     startTime: string;
@@ -74,23 +72,9 @@ class SleepStore {
         startTime: adjustTimeToUTC(startTime, this.sleepData[userId].utcOffset),
         endTime: adjustTimeToUTC(endTime, this.sleepData[userId].utcOffset),
       };
-
-      this.sleepData[userId].isEnabled = true;
     }
 
     return this.saveSleepData();
-  }
-
-  /**
-   * @deprecated
-   */
-  async setStatus(userId: string, isEnabled: boolean): Promise<boolean> {
-    const user = this.sleepData[userId];
-    if (!user) return false;
-
-    user.isEnabled = isEnabled;
-    await this.saveSleepData();
-    return true;
   }
 
   async deleteUser(userId: string): Promise<void> {

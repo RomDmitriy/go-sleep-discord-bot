@@ -44,7 +44,6 @@ client.on(Events.VoiceStateUpdate, async (oldState: VoiceState, newState: VoiceS
 
   const userSleep = sleepStore.getUser(userId);
   if (!userSleep) return; // у пользователя нет режима сна
-  if (!userSleep.isEnabled) return; // у пользователя выключены ограничения
 
   const { startTime, endTime } = userSleep.intervalUTC;
 
@@ -63,7 +62,7 @@ client.on(Events.MessageCreate, async (message) => {
 
   const user = sleepStore.getUser(message.author.id);
 
-  if (user && user.isEnabled && isInTimeInterval(user.intervalUTC.startTime, user.intervalUTC.endTime)) {
+  if (user && isInTimeInterval(user.intervalUTC.startTime, user.intervalUTC.endTime)) {
     try {
       await message.delete();
       console.log(`Deleted message from ${message.author.id} during sleep.`);

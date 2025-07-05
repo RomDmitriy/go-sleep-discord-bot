@@ -14,8 +14,6 @@ export function startSleepChecker(client: Client) {
     for (const userId of Object.keys(users)) {
       const user = users[userId];
 
-      if (!user.isEnabled) continue;
-
       const { startTime, endTime } = user.intervalUTC;
       const days = user.days;
 
