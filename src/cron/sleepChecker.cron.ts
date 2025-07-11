@@ -67,9 +67,10 @@ async function disconnectUser(member: any, userId: string) {
  */
 async function disconnectWithAnnouncement(member: any) {
   try {
+    const textChannel = member.voice.channel?.guild.systemChannel;
+
     await member.voice.disconnect();
 
-    const textChannel = member.voice.channel?.guild.systemChannel;
     const message = `${member.displayName} принудительно ушёл спать. 😴`;
 
     if (textChannel) {
