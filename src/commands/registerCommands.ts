@@ -4,8 +4,6 @@ import { data as goSleepData } from './gosleep.js';
 import { data as noSleepData } from './nosleep.js';
 import { data as setDaysData } from './setdays.js';
 
-dotenv.config();
-
 export async function registerCommands() {
   const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN!);
 
