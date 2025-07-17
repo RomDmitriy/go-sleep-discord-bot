@@ -8,7 +8,7 @@ import { startSleepChecker } from './cron/sleepChecker.cron.js';
 import { isInTimeInterval } from './utils/time.utils.js';
 import { sleepStore } from './store/sleep.store.js';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const client = new Client({
   intents: [
