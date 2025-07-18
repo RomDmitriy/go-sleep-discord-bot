@@ -13,7 +13,7 @@ export function startSleepChecker(client: Client) {
 
       const { startTime, endTime } = user.intervalUTC;
 
-      if (!isTodayEnabled(user.days)) {
+      if (!isTodayEnabled(user.days, user.utcOffset)) {
         continue;
       }
 

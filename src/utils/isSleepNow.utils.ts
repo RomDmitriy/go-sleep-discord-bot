@@ -7,7 +7,7 @@ export default async function isSleepNow(
   interaction: ChatInputCommandInteraction<CacheType>,
   userData: SleepUser,
 ): Promise<boolean> {
-  if (isTodayEnabled(userData.days)) {
+  if (isTodayEnabled(userData.days, userData.utcOffset)) {
     if (isInTimeInterval(userData.intervalUTC.startTime, userData.intervalUTC.endTime)) {
       await interaction.reply({
         content: '⛔ Нельзя отменить режим сна во время его действия.',

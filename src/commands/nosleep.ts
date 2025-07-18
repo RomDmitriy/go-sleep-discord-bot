@@ -1,7 +1,5 @@
 import { ChatInputCommandInteraction, MessageFlags, SlashCommandBuilder } from 'discord.js';
 import { sleepStore } from '../store/sleep.store';
-import { getMinutesDifference, isInTimeInterval } from '../utils/time.utils';
-import isTodayEnabled from '../utils/isTodayEnabled.utils';
 import isSleepNow from '../utils/isSleepNow.utils';
 
 export const data = new SlashCommandBuilder().setName('nosleep').setDescription('Удалить режим сна');

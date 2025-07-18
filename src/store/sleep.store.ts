@@ -37,7 +37,7 @@ export class SleepUser {
     };
   }
 
-  utcOffset?: number;
+  utcOffset: number;
   interval: {
     startTime: string;
     endTime: string;

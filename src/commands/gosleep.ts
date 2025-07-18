@@ -1,7 +1,6 @@
 import { ChatInputCommandInteraction, MessageFlags, SlashCommandBuilder } from 'discord.js';
-import { getMinutesDifference, isInTimeInterval, normalizeTime } from '../utils/time.utils.js';
+import { normalizeTime } from '../utils/time.utils.js';
 import { sleepStore } from '../store/sleep.store.js';
-import isTodayEnabled from '../utils/isTodayEnabled.utils.js';
 import isSleepNow from '../utils/isSleepNow.utils.js';
 
 export const data = new SlashCommandBuilder()

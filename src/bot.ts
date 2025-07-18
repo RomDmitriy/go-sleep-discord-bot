@@ -48,7 +48,7 @@ client.on(Events.VoiceStateUpdate, async (oldState: VoiceState, newState: VoiceS
 
   const { startTime, endTime } = userSleep.intervalUTC;
 
-  if (isInTimeInterval(startTime, endTime) && isTodayEnabled(userSleep.days)) {
+  if (isInTimeInterval(startTime, endTime) && isTodayEnabled(userSleep.days, userSleep.utcOffset)) {
     try {
       await newState.disconnect();
       console.log(`Kicked user ${userId} from voice during sleep interval.`);
@@ -63,7 +63,11 @@ client.on(Events.MessageCreate, async (message) => {
 
   const user = sleepStore.getUser(message.author.id);
 
-  if (user && isInTimeInterval(user.intervalUTC.startTime, user.intervalUTC.endTime) && isTodayEnabled(user.days)) {
+  if (
+    user &&
+    isInTimeInterval(user.intervalUTC.startTime, user.intervalUTC.endTime) &&
+    isTodayEnabled(user.days, user.utcOffset)
+  ) {
     try {
       await message.delete();
       console.log(`Deleted message from ${message.author.id} during sleep.`);

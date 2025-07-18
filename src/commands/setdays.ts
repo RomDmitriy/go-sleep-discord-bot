@@ -25,13 +25,13 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
   if (await isSleepNow(interaction, userData)) return;
 
-  const monday = interaction.options.getBoolean('monday') ?? true;
-  const tuesday = interaction.options.getBoolean('tuesday') ?? true;
-  const wednesday = interaction.options.getBoolean('wednesday') ?? true;
-  const thursday = interaction.options.getBoolean('thursday') ?? true;
-  const friday = interaction.options.getBoolean('friday') ?? true;
-  const saturday = interaction.options.getBoolean('saturday') ?? true;
-  const sunday = interaction.options.getBoolean('sunday') ?? true;
+  const monday = interaction.options.getBoolean('monday') ?? userData.days.monday ?? true;
+  const tuesday = interaction.options.getBoolean('tuesday') ?? userData.days.tuesday ?? true;
+  const wednesday = interaction.options.getBoolean('wednesday') ?? userData.days.wednesday ?? true;
+  const thursday = interaction.options.getBoolean('thursday') ?? userData.days.thursday ?? true;
+  const friday = interaction.options.getBoolean('friday') ?? userData.days.friday ?? true;
+  const saturday = interaction.options.getBoolean('saturday') ?? userData.days.saturday ?? true;
+  const sunday = interaction.options.getBoolean('sunday') ?? userData.days.sunday ?? true;
 
   await sleepStore.setDays(interaction.user.id, { monday, tuesday, wednesday, thursday, friday, saturday, sunday });
 

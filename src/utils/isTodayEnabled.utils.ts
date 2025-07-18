@@ -2,8 +2,14 @@ import { IDays } from '../store/sleep.store';
 
 type WeekdayType = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
-export default function isTodayEnabled(days: IDays): boolean {
-  const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase() as WeekdayType;
+export default function isTodayEnabled(days: IDays, utcOffset: number): boolean {
+  const nowUtc = new Date();
+  const utcTime = nowUtc.getTime() + utcOffset * 60 * 1000;
+  const adjustedDate = new Date(utcTime);
 
-  return days[today];
+  const weekday = adjustedDate
+    .toLocaleDateString('en-US', { weekday: 'long', timeZone: 'UTC' })
+    .toLowerCase() as WeekdayType;
+
+  return days[weekday];
 }
