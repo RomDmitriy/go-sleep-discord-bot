@@ -13,7 +13,7 @@ export default async function isSleepNow(
         content: '⛔ Нельзя отменить режим сна во время его действия.',
         flags: MessageFlags.Ephemeral,
       });
-      return false;
+      return true;
     }
 
     const minutesToStart = getMinutesDifference(userData.intervalUTC.startTime);
@@ -22,9 +22,9 @@ export default async function isSleepNow(
         content: '⛔ Нельзя отменить режим сна за 15 минут до его начала.',
         flags: MessageFlags.Ephemeral,
       });
-      return false;
+      return true;
     }
   }
 
-  return true;
+  return false;
 }
