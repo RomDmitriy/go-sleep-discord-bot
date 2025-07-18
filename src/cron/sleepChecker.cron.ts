@@ -2,22 +2,18 @@ import cron from 'node-cron';
 import { Client } from 'discord.js';
 import { getMinutesDifference, isInTimeInterval } from '../utils/time.utils.js';
 import { sleepStore } from '../store/sleep.store.js';
-
-type WeekdayType = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+import isTodayEnabled from '../utils/isTodayEnabled.utils.js';
 
 export function startSleepChecker(client: Client) {
   cron.schedule('0 * * * * *', async () => {
-    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase() as WeekdayType;
-
     const users = sleepStore.getUsers();
 
     for (const userId of Object.keys(users)) {
       const user = users[userId];
 
       const { startTime, endTime } = user.intervalUTC;
-      const days = user.days;
 
-      if (!(days[today] || false)) {
+      if (!isTodayEnabled(user.days)) {
         continue;
       }
 

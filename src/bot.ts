@@ -7,6 +7,7 @@ import * as setdays from './commands/setdays.js';
 import { startSleepChecker } from './cron/sleepChecker.cron.js';
 import { isInTimeInterval } from './utils/time.utils.js';
 import { sleepStore } from './store/sleep.store.js';
+import isTodayEnabled from './utils/isTodayEnabled.utils.js';
 
 dotenv.config({ quiet: true });
 
@@ -47,7 +48,7 @@ client.on(Events.VoiceStateUpdate, async (oldState: VoiceState, newState: VoiceS
 
   const { startTime, endTime } = userSleep.intervalUTC;
 
-  if (isInTimeInterval(startTime, endTime)) {
+  if (isInTimeInterval(startTime, endTime) && isTodayEnabled(userSleep.days)) {
     try {
       await newState.disconnect();
       console.log(`Kicked user ${userId} from voice during sleep interval.`);
@@ -62,7 +63,7 @@ client.on(Events.MessageCreate, async (message) => {
 
   const user = sleepStore.getUser(message.author.id);
 
-  if (user && isInTimeInterval(user.intervalUTC.startTime, user.intervalUTC.endTime)) {
+  if (user && isInTimeInterval(user.intervalUTC.startTime, user.intervalUTC.endTime) && isTodayEnabled(user.days)) {
     try {
       await message.delete();
       console.log(`Deleted message from ${message.author.id} during sleep.`);

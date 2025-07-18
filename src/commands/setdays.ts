@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction, MessageFlags, SlashCommandBuilder } from 'discord.js';
 import { sleepStore } from '../store/sleep.store.js';
+import isSleepNow from '../utils/isSleepNow.utils.js';
 
 export const data = new SlashCommandBuilder()
   .setName('setdays')
@@ -13,6 +14,17 @@ export const data = new SlashCommandBuilder()
   .addBooleanOption((option) => option.setName('sunday').setDescription('Воскресенье'));
 
 export async function execute(interaction: ChatInputCommandInteraction) {
+  const userData = sleepStore.getUser(interaction.user.id);
+  if (!userData) {
+    await interaction.reply({
+      content: `Вы не указали интервал, выполните команду /gosleep`,
+      flags: MessageFlags.Ephemeral,
+    });
+    return;
+  }
+
+  if (await isSleepNow(interaction, userData)) return;
+
   const monday = interaction.options.getBoolean('monday') ?? true;
   const tuesday = interaction.options.getBoolean('tuesday') ?? true;
   const wednesday = interaction.options.getBoolean('wednesday') ?? true;
@@ -21,17 +33,10 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   const saturday = interaction.options.getBoolean('saturday') ?? true;
   const sunday = interaction.options.getBoolean('sunday') ?? true;
 
-  if (
-    await sleepStore.setDays(interaction.user.id, { monday, tuesday, wednesday, thursday, friday, saturday, sunday })
-  ) {
-    await interaction.reply({
-      content: `✅ Дни недели установлены`,
-      flags: MessageFlags.Ephemeral,
-    });
-  } else {
-    await interaction.reply({
-      content: `Вы не указали интервал, выполните команду /gosleep`,
-      flags: MessageFlags.Ephemeral,
-    });
-  }
+  await sleepStore.setDays(interaction.user.id, { monday, tuesday, wednesday, thursday, friday, saturday, sunday });
+
+  await interaction.reply({
+    content: `✅ Дни недели установлены`,
+    flags: MessageFlags.Ephemeral,
+  });
 }

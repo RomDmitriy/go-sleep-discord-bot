@@ -5,7 +5,7 @@ import { adjustTimeToUTC } from '../utils/time.utils';
 
 const DATA_PATH = path.join(__dirname, '..', 'sleepData.json');
 
-interface IDays {
+export interface IDays {
   monday: boolean;
   tuesday: boolean;
   wednesday: boolean;
@@ -15,7 +15,7 @@ interface IDays {
   sunday: boolean;
 }
 
-class SleepUser {
+export class SleepUser {
   constructor(startTime: string, endTime: string, utcOffset: number) {
     this.utcOffset = utcOffset;
     this.interval = {
@@ -83,12 +83,8 @@ class SleepStore {
   }
 
   async setDays(userId: string, days: IDays) {
-    const user = this.sleepData[userId];
-    if (!user) return false;
-
-    user.days = days;
+    this.sleepData[userId].days = days;
     await this.saveSleepData();
-    return true;
   }
 
   getUser(userId: string): SleepUser | null {

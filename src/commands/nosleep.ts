@@ -1,6 +1,8 @@
 import { ChatInputCommandInteraction, MessageFlags, SlashCommandBuilder } from 'discord.js';
 import { sleepStore } from '../store/sleep.store';
 import { getMinutesDifference, isInTimeInterval } from '../utils/time.utils';
+import isTodayEnabled from '../utils/isTodayEnabled.utils';
+import isSleepNow from '../utils/isSleepNow.utils';
 
 export const data = new SlashCommandBuilder().setName('nosleep').setDescription('Удалить режим сна');
 
@@ -15,24 +17,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     return;
   }
 
-  const { startTime, endTime } = userSleep.intervalUTC;
-
-  if (isInTimeInterval(startTime, endTime)) {
-    await interaction.reply({
-      content: '⛔ Нельзя отменить режим сна во время его действия.',
-      flags: MessageFlags.Ephemeral,
-    });
-    return;
-  }
-
-  const minutesToStart = getMinutesDifference(startTime);
-  if (minutesToStart <= 15) {
-    await interaction.reply({
-      content: '⛔ Нельзя отменить режим сна за 15 минут до его начала.',
-      flags: MessageFlags.Ephemeral,
-    });
-    return;
-  }
+  if (await isSleepNow(interaction, userSleep)) return;
 
   await sleepStore.deleteUser(interaction.user.id);
 

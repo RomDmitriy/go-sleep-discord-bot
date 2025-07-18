@@ -3,6 +3,7 @@ import cron from 'node-cron';
 import { sleepStore } from '../store/sleep.store';
 import { getMinutesDifference } from '../utils/time.utils';
 
+// FIXME: не работает..
 export function startSleepChecker(client: Client) {
   cron.schedule('0 * * * *', async () => {
     const sleepData = sleepStore.getUsers();
