@@ -19,7 +19,7 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction: ChatInputCommandInteraction) {
   const userSleep = sleepStore.getUser(interaction.user.id);
 
-  if (userSleep && !(await isSleepNow(interaction, userSleep))) return;
+  if (userSleep && (await isSleepNow(interaction, userSleep))) return;
 
   let startTime: string | null = interaction.options.getString('start_time') ?? '';
   let endTime: string | null = interaction.options.getString('end_time') ?? '';
